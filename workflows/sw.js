@@ -1,9 +1,9 @@
-const CACHE_NAME = 'rba-v3'; // Versão 3 para atualizar o cache
 const ASSETS_TO_CACHE = [
     'offline.html',
-    'logo.png',         // Certifique-se que o nome está idêntico ao arquivo
-    'icone-app.png',    // O ícone usado no jogo
-    'indexapp.html'        // Salva a página principal para evitar tela branca
+    'logo.png',
+    'indexapp.html',
+    'index.html', // É sempre bom incluir a raiz
+    'manifest.json' // Essencial para o iOS validar o app offline
 ];
 
 // INSTALAÇÃO: Guarda tudo o que é essencial no celular
