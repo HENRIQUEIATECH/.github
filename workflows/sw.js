@@ -1,7 +1,6 @@
 const ASSETS_TO_CACHE = [
     'offline.html',
     'logo.png',
-    'indexapp.html',
     'index.html', // É sempre bom incluir a raiz
     'manifest.json' // Essencial para o iOS validar o app offline
 ];
