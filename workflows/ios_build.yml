@@ -1,0 +1,18 @@
+name: Build iOS IPA
+on: [push] # Compila toda vez que você enviar código para o GitHub
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Node and Capacitor
+        run: |
+          npm install
+          npx cap sync ios
+
+      - name: Build App
+        run: |
+          # Este comando compila o projeto Xcode gerado pelo Capacitor
+          xcodebuild -workspace ios/App/App.xcworkspace -scheme App -sdk iphoneos -configuration AppStoreDistribution package
