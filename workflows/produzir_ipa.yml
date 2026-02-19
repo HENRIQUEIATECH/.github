@@ -1,0 +1,10 @@
+name: Gerador de IPA
+on: [push, workflow_dispatch] # Aceita empurrão ou botão manual
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Acorda Robo
+        run: echo "Iniciando fabrica de IPA para a Rádio Brasil Artes"
