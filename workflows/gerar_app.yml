@@ -6,7 +6,7 @@ jobs:
     runs-on: macos-latest
     defaults:
       run:
-        working-directory: ./rba-ipa  
+        working-directory: https://iartium.com/rba-ipa
 
     steps:
       - uses: actions/checkout@v3
