@@ -4,7 +4,6 @@ on: [push]
 jobs:
   build:
     runs-on: macos-latest
-    # Define que todos os comandos abaixo serão executados dentro da pasta rba-ipa
     defaults:
       run:
         working-directory: ./rba-ipa
@@ -15,9 +14,7 @@ jobs:
       - name: Install Node and Capacitor
         run: |
           npm install
-          # Se o Capacitor ainda não estiver inicializado na pasta, 
-          # estes comandos preparam o terreno:
-          npx cap init "Rádio Brasil Artes" com.iartium.rba --web-dir .
+          npx cap init "RBA" com.iartium.rba --web-dir .
           npx cap add ios
           npx cap sync ios
 
