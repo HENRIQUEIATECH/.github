@@ -1,4 +1,4 @@
-name: GERADOR_IPA_RBA
+name: GERADOR_IPA_RBA 
 on:
   push:
     branches: [ main, master ]
