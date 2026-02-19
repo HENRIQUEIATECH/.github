@@ -1,4 +1,4 @@
-name: Gerador de IPA
+name: Gerador de IPA 
 on: [push, workflow_dispatch] # Aceita empurrão ou botão manual
 
 jobs:
