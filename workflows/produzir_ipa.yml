@@ -1,24 +1,26 @@
-name: FABRICA DE IPA 
-on: [push, workflow_dispatch]
+name: Build iOS IPA
+on: [push]
 
 jobs:
-  construir:
+  build:
     runs-on: macos-latest
+    # Define que todos os comandos abaixo serão executados dentro da pasta rba-ipa
+    defaults:
+      run:
+        working-directory: ./rba-ipa
+
     steps:
-      - name: Checkout do Codigo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
-      - name: Listar Arquivos (Para eu ver o que o robo ve)
-        run: ls -R
-
-      - name: Comando de Forca Bruta
+      - name: Install Node and Capacitor
         run: |
-          echo "Se voce esta lendo isso, o robo do IPA acordou!"
-          mkdir -p output
-          echo "Este é um teste de arquivo" > output/sucesso.txt
+          npm install
+          # Se o Capacitor ainda não estiver inicializado na pasta, 
+          # estes comandos preparam o terreno:
+          npx cap init "Rádio Brasil Artes" com.iartium.rba --web-dir .
+          npx cap add ios
+          npx cap sync ios
 
-      - name: Upload do Resultado
-        uses: actions/upload-artifact@v4
-        with:
-          name: PRODUTO-FINAL-IPA
-          path: output/ 
+      - name: Build App
+        run: |
+          xcodebuild -workspace ios/App/App.xcworkspace -scheme App -sdk iphoneos -configuration AppStoreDistribution package
