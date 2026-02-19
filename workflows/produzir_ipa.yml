@@ -1,10 +1,24 @@
-name: Gerador de IPA 
-on: [push, workflow_dispatch] # Aceita empurrão ou botão manual
+name: FABRICA DE IPA
+on: [push, workflow_dispatch]
 
 jobs:
-  build:
+  construir:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Acorda Robo
-        run: echo "Iniciando fabrica de IPA para a Rádio Brasil Artes"
+      - name: Checkout do Codigo
+        uses: actions/checkout@v4
+
+      - name: Listar Arquivos (Para eu ver o que o robo ve)
+        run: ls -R
+
+      - name: Comando de Forca Bruta
+        run: |
+          echo "Se voce esta lendo isso, o robo do IPA acordou!"
+          mkdir -p output
+          echo "Este é um teste de arquivo" > output/sucesso.txt
+
+      - name: Upload do Resultado
+        uses: actions/upload-artifact@v4
+        with:
+          name: PRODUTO-FINAL-IPA
+          path: output/
