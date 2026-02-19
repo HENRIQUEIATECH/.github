@@ -1,15 +1,46 @@
 name: GERADOR_IPA_RBA
 on:
   push:
-    branches:
-      - main
-      - master
+    branches: [ main, master, ios ]
   workflow_dispatch:
 
 jobs:
   construir:
     runs-on: macos-latest
+    
+    # AQUI ESTÁ A DIREÇÃO: Diz ao robô para entrar na pasta onde seu app vive
+    defaults:
+      run:
+        working-directory: ./rba-ipa
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Teste de Vida
-        run: echo "O robo do Paulo esta vivo!"
+      - name: Checkout do Codigo
+        uses: actions/checkout@v4
+
+      - name: Teste de Direção
+        run: |
+          echo "Entrando na pasta rba-ipa..."
+          ls -R # Isso vai listar os arquivos no log para termos certeza
+
+      - name: Configurar Node e Capacitor
+        run: |
+          npm install
+          npx cap init "Rádio Brasil Artes" com.iartium.rba --web-dir . --force
+          npx cap add ios || true
+          npx cap sync ios
+
+      - name: Compilar IPA (Soberania)
+        run: |
+          xcodebuild -workspace ios/App/App.xcworkspace \
+                     -scheme App \
+                     -sdk iphoneos \
+                     -configuration Release \
+                     CODE_SIGNING_ALLOWED=NO \
+                     archive -archivePath ./build/App.xcarchive
+
+      - name: Entregar Arquivo
+        uses: actions/upload-artifact@v4
+        with:
+          name: App-RBA-iOS
+          # O caminho do artefato também precisa considerar a pasta rba-ipa
+          path: rba-ipa/build/*.xcarchive
