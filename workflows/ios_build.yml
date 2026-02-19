@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install Node and Capacitor 
+      - name: Install Node and Capacitor
         run: |
           npm install
           # Se o Capacitor ainda não estiver inicializado na pasta, 
