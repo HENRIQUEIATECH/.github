@@ -1,23 +1,34 @@
-name: FABRICA DE APP RBA  
-on: [push]
+name: Fabrica de IPA RBA
+on: 
+  workflow_dispatch: # Isso permite que você aperte um botão para gerar quando quiser
 
 jobs:
-  build:
+  build_ios:
     runs-on: macos-latest
-    defaults:
-      run:
-        working-directory: https://iartium.com/rba-ipa
-
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Install Node and Capacitor
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Instalando Ferramentas de Construção
         run: |
+          npm install -g @ionic/cli @capacitor/cli
           npm install
+
+      - name: Criando o Casulo iOS
+        run: |
           npx cap init "RBA" com.iartium.rba --web-dir .
           npx cap add ios
           npx cap sync ios
 
-      - name: Build App
+      - name: Compilando o IPA (Sem Assinatura)
         run: |
-          xcodebuild -workspace ios/App/App.xcworkspace -scheme App -sdk iphoneos -configuration AppStoreDistribution package
+          xcodebuild -workspace ios/App/App.xcworkspace \
+                     -scheme App \
+                     -sdk iphoneos \
+                     -configuration Release \
+                     CODE_SIGNING_ALLOWED=NO \
+                     archive -archivePath ./build/App.xcarchive
