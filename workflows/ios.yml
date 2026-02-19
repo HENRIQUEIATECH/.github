@@ -1,14 +1,13 @@
 name: GERADOR_IPA_RBA
 on:
   push:
-    branches: [ main, master, ios ]
-  workflow_dispatch:
+    branches: [ main, master ]
+  workflow_dispatch: # Isso cria o botão manual
 
 jobs:
   construir:
     runs-on: macos-latest
     
-    # AQUI ESTÁ A DIREÇÃO: Diz ao robô para entrar na pasta onde seu app vive
     defaults:
       run:
         working-directory: ./rba-ipa
@@ -17,30 +16,32 @@ jobs:
       - name: Checkout do Codigo
         uses: actions/checkout@v4
 
-      - name: Teste de Direção
-        run: |
-          echo "Entrando na pasta rba-ipa..."
-          ls -R # Isso vai listar os arquivos no log para termos certeza
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
-      - name: Configurar Node e Capacitor
+      - name: Instalar Dependencias
         run: |
           npm install
-          npx cap init "Rádio Brasil Artes" com.iartium.rba --web-dir . --force
+          npm install -g @capacitor/cli
           npx cap add ios || true
           npx cap sync ios
 
       - name: Compilar IPA (Soberania)
         run: |
+          # Prepara a pasta de build
+          mkdir -p build
+          # Comando para o Xcode construir o projeto sem precisar de assinatura agora
           xcodebuild -workspace ios/App/App.xcworkspace \
                      -scheme App \
-                     -sdk iphoneos \
                      -configuration Release \
+                     -sdk iphoneos \
                      CODE_SIGNING_ALLOWED=NO \
                      archive -archivePath ./build/App.xcarchive
 
-      - name: Entregar Arquivo
+      - name: Disponibilizar para Download
         uses: actions/upload-artifact@v4
         with:
           name: App-RBA-iOS
-          # O caminho do artefato também precisa considerar a pasta rba-ipa
-          path: rba-ipa/build/*.xcarchive
+          path: rba-ipa/build/App.xcarchive
