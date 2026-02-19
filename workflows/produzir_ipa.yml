@@ -1,26 +1,52 @@
-name: Build iOS IPA 
-on: [push]
+name: Build iOS IPA - Soberania RBA
+on: 
+  push:
+    branches: [ main, ios ] # Roda quando você envia para a main ou para a branch ios
+  workflow_dispatch: # Cria o botão manual para você disparar quando quiser
+
+permissions:
+  contents: write
+  packages: write
 
 jobs:
   build:
     runs-on: macos-latest
-    # Define que todos os comandos abaixo serão executados dentro da pasta rba-ipa
+    
     defaults:
       run:
         working-directory: ./rba-ipa
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout do Codigo
+        uses: actions/checkout@v4
 
-      - name: Install Node and Capacitor
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Instalar Dependencias e Capacitor
         run: |
           npm install
-          # Se o Capacitor ainda não estiver inicializado na pasta, 
-          # estes comandos preparam o terreno:
-          npx cap init "Rádio Brasil Artes" com.iartium.rba --web-dir .
-          npx cap add ios
+          npm install -g @capacitor/cli
+          # Inicializa o projeto caso ainda não exista a pasta ios
+          npx cap init "Rádio Brasil Artes" com.iartium.rba --web-dir . --force
+          npx cap add ios || true
           npx cap sync ios
 
-      - name: Build App
+      - name: Compilar App para iOS
         run: |
-          xcodebuild -workspace ios/App/App.xcworkspace -scheme App -sdk iphoneos -configuration AppStoreDistribution package
+          # Este comando limpa e prepara o projeto no Xcode
+          xcodebuild -workspace ios/App/App.xcworkspace \
+                     -scheme App \
+                     -sdk iphoneos \
+                     -configuration Release \
+                     CODE_SIGNING_ALLOWED=NO \
+                     archive -archivePath ./build/App.xcarchive
+
+      - name: Gerar Artefato para Download
+        uses: actions/upload-artifact@v4
+        with:
+          name: App-RBA-iOS
+          path: rba-ipa/ios/App/
+          retention-days: 5
