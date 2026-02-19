@@ -21,4 +21,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: PRODUTO-FINAL-IPA
-          path: output/
+          path: output/ 
