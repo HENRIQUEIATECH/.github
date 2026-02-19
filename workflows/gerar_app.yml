@@ -1,4 +1,4 @@
-name: Build iOS IPA
+name: FABRICA DE APP RBA
 on: [push]
 
 jobs:
