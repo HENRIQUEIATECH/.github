@@ -1,0 +1,12 @@
+name: GERADOR_IPA_RBA
+on: 
+  push:
+  workflow_dispatch:
+
+jobs:
+  construir:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Teste de Vida
+        run: echo "O robo do Paulo esta vivo!"
