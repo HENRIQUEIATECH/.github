@@ -1,4 +1,4 @@
-name: Build iOS IPA - Soberania RBA
+name: Build iOS IPA - Soberania RBA 
 on: 
   push:
     branches: [ main, ios ] # Roda quando você envia para a main ou para a branch ios
