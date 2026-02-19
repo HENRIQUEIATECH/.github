@@ -1,4 +1,4 @@
-name: Fabrica de IPA RBA
+name: Fabrica de IPA RBA 
 on: 
   workflow_dispatch: # Isso permite que você aperte um botão para gerar quando quiser
 
